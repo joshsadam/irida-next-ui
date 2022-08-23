@@ -15,6 +15,13 @@ type User {
     skip: Int! = 0
   ): [Project!]
   projectsCount(where: ProjectWhereInput! = {}): Int
+  teams(
+    where: TeamWhereInput! = {}
+    orderBy: [TeamOrderByInput!]! = []
+    take: Int
+    skip: Int! = 0
+  ): [Team!]
+  teamsCount(where: TeamWhereInput! = {}): Int
 }
 
 scalar DateTime
@@ -39,6 +46,7 @@ input UserWhereInput {
   enabled: BooleanFilter
   createdDate: DateTimeNullableFilter
   projects: ProjectManyRelationFilter
+  teams: TeamManyRelationFilter
 }
 
 input IDFilter {
@@ -102,6 +110,12 @@ input ProjectManyRelationFilter {
   none: ProjectWhereInput
 }
 
+input TeamManyRelationFilter {
+  every: TeamWhereInput
+  some: TeamWhereInput
+  none: TeamWhereInput
+}
+
 input UserOrderByInput {
   id: OrderDirection
   name: OrderDirection
@@ -122,6 +136,7 @@ input UserUpdateInput {
   createdDate: DateTime
   password: String
   projects: ProjectRelateToManyForUpdateInput
+  teams: TeamRelateToManyForUpdateInput
 }
 
 input ProjectRelateToManyForUpdateInput {
@@ -129,6 +144,13 @@ input ProjectRelateToManyForUpdateInput {
   set: [ProjectWhereUniqueInput!]
   create: [ProjectCreateInput!]
   connect: [ProjectWhereUniqueInput!]
+}
+
+input TeamRelateToManyForUpdateInput {
+  disconnect: [TeamWhereUniqueInput!]
+  set: [TeamWhereUniqueInput!]
+  create: [TeamCreateInput!]
+  connect: [TeamWhereUniqueInput!]
 }
 
 input UserUpdateArgs {
@@ -143,11 +165,17 @@ input UserCreateInput {
   createdDate: DateTime
   password: String
   projects: ProjectRelateToManyForCreateInput
+  teams: TeamRelateToManyForCreateInput
 }
 
 input ProjectRelateToManyForCreateInput {
   create: [ProjectCreateInput!]
   connect: [ProjectWhereUniqueInput!]
+}
+
+input TeamRelateToManyForCreateInput {
+  create: [TeamCreateInput!]
+  connect: [TeamWhereUniqueInput!]
 }
 
 type Project {
@@ -162,6 +190,13 @@ type Project {
     skip: Int! = 0
   ): [User!]
   usersCount(where: UserWhereInput! = {}): Int
+  teams(
+    where: TeamWhereInput! = {}
+    orderBy: [TeamOrderByInput!]! = []
+    take: Int
+    skip: Int! = 0
+  ): [Team!]
+  teamsCount(where: TeamWhereInput! = {}): Int
   samples(
     where: SampleWhereInput! = {}
     orderBy: [SampleOrderByInput!]! = []
@@ -184,6 +219,7 @@ input ProjectWhereInput {
   description: StringFilter
   createdDate: DateTimeNullableFilter
   users: UserManyRelationFilter
+  teams: TeamManyRelationFilter
   samples: SampleManyRelationFilter
 }
 
@@ -211,6 +247,7 @@ input ProjectUpdateInput {
   description: String
   createdDate: DateTime
   users: UserRelateToManyForUpdateInput
+  teams: TeamRelateToManyForUpdateInput
   samples: SampleRelateToManyForUpdateInput
 }
 
@@ -238,6 +275,7 @@ input ProjectCreateInput {
   description: String
   createdDate: DateTime
   users: UserRelateToManyForCreateInput
+  teams: TeamRelateToManyForCreateInput
   samples: SampleRelateToManyForCreateInput
 }
 
@@ -329,6 +367,71 @@ input SampleCreateInput {
   projects: ProjectRelateToManyForCreateInput
 }
 
+type Team {
+  id: ID!
+  name: String
+  description: String
+  members(
+    where: UserWhereInput! = {}
+    orderBy: [UserOrderByInput!]! = []
+    take: Int
+    skip: Int! = 0
+  ): [User!]
+  membersCount(where: UserWhereInput! = {}): Int
+  parentTeam: Team
+}
+
+input TeamWhereUniqueInput {
+  id: ID
+}
+
+input TeamWhereInput {
+  AND: [TeamWhereInput!]
+  OR: [TeamWhereInput!]
+  NOT: [TeamWhereInput!]
+  id: IDFilter
+  name: StringFilter
+  description: StringFilter
+  members: UserManyRelationFilter
+  parentTeam: TeamWhereInput
+}
+
+input TeamOrderByInput {
+  id: OrderDirection
+  name: OrderDirection
+  description: OrderDirection
+}
+
+input TeamUpdateInput {
+  name: String
+  description: String
+  members: UserRelateToManyForUpdateInput
+  parentTeam: TeamRelateToOneForUpdateInput
+}
+
+input TeamRelateToOneForUpdateInput {
+  create: TeamCreateInput
+  connect: TeamWhereUniqueInput
+  disconnect: Boolean
+}
+
+input TeamUpdateArgs {
+  where: TeamWhereUniqueInput!
+  data: TeamUpdateInput!
+}
+
+input TeamCreateInput {
+  name: String
+  description: String
+  members: UserRelateToManyForCreateInput
+  parentTeam: TeamRelateToOneForCreateInput
+}
+
+input TeamRelateToOneForCreateInput {
+  create: TeamCreateInput
+  connect: TeamWhereUniqueInput
+}
+
 """
 The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
 """
@@ -359,6 +462,12 @@ type Mutation {
   updateSamples(data: [SampleUpdateArgs!]!): [Sample]
   deleteSample(where: SampleWhereUniqueInput!): Sample
   deleteSamples(where: [SampleWhereUniqueInput!]!): [Sample]
+  createTeam(data: TeamCreateInput!): Team
+  createTeams(data: [TeamCreateInput!]!): [Team]
+  updateTeam(where: TeamWhereUniqueInput!, data: TeamUpdateInput!): Team
+  updateTeams(data: [TeamUpdateArgs!]!): [Team]
+  deleteTeam(where: TeamWhereUniqueInput!): Team
+  deleteTeams(where: [TeamWhereUniqueInput!]!): [Team]
   endSession: Boolean!
   authenticateUserWithPassword(
     email: String!
@@ -413,6 +522,14 @@ type Query {
   ): [Sample!]
   sample(where: SampleWhereUniqueInput!): Sample
   samplesCount(where: SampleWhereInput! = {}): Int
+  teams(
+    where: TeamWhereInput! = {}
+    orderBy: [TeamOrderByInput!]! = []
+    take: Int
+    skip: Int! = 0
+  ): [Team!]
+  team(where: TeamWhereUniqueInput!): Team
+  teamsCount(where: TeamWhereInput! = {}): Int
   keystone: KeystoneMeta!
   authenticatedItem: AuthenticatedItem
 }

@@ -26,6 +26,7 @@ import {
   timestamp,
   select,
   checkbox,
+  image,
 } from "@keystone-6/core/fields";
 // The document field is a more complicated field, so it's in its own package
 // Keystone aims to have all the base field types, but you can make your own
@@ -64,6 +65,11 @@ export const lists: Lists = {
       // should be referencable by the 'author' field of posts.
       // Make sure you read the docs to understand how they work: https://keystonejs.com/docs/guides/relationships#understanding-relationships
       projects: relationship({ ref: "Project.users", many: true }),
+      teams: relationship({
+        ref: "Team.members",
+        many: true,
+        isFilterable: true,
+      }),
     },
     // Here we can configure the Admin UI. We want to show a user's name and posts in the Admin UI
     ui: {
@@ -80,6 +86,10 @@ export const lists: Lists = {
       createdDate: timestamp({ defaultValue: { kind: "now" } }),
       users: relationship({
         ref: "User.projects",
+        many: true,
+      }),
+      teams: relationship({
+        ref: "Team",
         many: true,
       }),
       samples: relationship({
@@ -107,6 +117,22 @@ export const lists: Lists = {
         },
       }),
       projects: relationship({ ref: "Project.samples", many: true }),
+    },
+  }),
+  Team: list({
+    fields: {
+      name: text(),
+      description: text(),
+      members: relationship({
+        ref: "User.teams",
+        many: true,
+        isFilterable: true,
+      }),
+      parentTeam: relationship({
+        ref: "Team",
+        isFilterable: true,
+        many: false,
+      }),
     },
   }),
   // // Our second list is the Posts list. We've got a few more fields here

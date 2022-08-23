@@ -20,6 +20,7 @@ model User {
   createdDate DateTime? @default(now())
   password    String
   projects    Project[] @relation("Project_users")
+  teams       Team[]    @relation("Team_members")
 }
 
 model Project {
@@ -28,6 +29,7 @@ model Project {
   description String    @default("")
   createdDate DateTime? @default(now())
   users       User[]    @relation("Project_users")
+  teams       Team[]    @relation("Project_teams")
   samples     Sample[]  @relation("Project_samples")
 }
 
@@ -36,4 +38,17 @@ model Sample {
   name     String    @default("")
   organism String?
   projects Project[] @relation("Project_samples")
+}
+
+model Team {
+  id                   String    @id @default(cuid())
+  name                 String    @default("")
+  description          String    @default("")
+  members              User[]    @relation("Team_members")
+  parentTeam           Team?     @relation("Team_parentTeam", fields: [parentTeamId], references: [id])
+  parentTeamId         String?   @map("parentTeam")
+  from_Project_teams   Project[] @relation("Project_teams")
+  from_Team_parentTeam Team[]    @relation("Team_parentTeam")
+
+  @@index([parentTeamId])
 }
