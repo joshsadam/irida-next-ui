@@ -1,3 +1,4 @@
+import "dotenv/config";
 /*
 Welcome to the auth file! Here we have put a config to do basic auth in Keystone.
 
@@ -22,7 +23,7 @@ if (!sessionSecret) {
       "The SESSION_SECRET environment variable must be set in production"
     );
   } else {
-    sessionSecret = "-- DEV COOKIE SECRET; CHANGE ME --";
+    sessionSecret = process.env.COOKIE_SECRET;
   }
 }
 
