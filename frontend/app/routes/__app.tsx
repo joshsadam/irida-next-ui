@@ -1,5 +1,5 @@
-import { json } from "@remix-run/node";
 import type { LoaderFunction } from "@remix-run/node";
+import { json } from "@remix-run/node";
 import { Form, Link, Outlet } from "@remix-run/react";
 import { authenticator } from "~/services/auth.server";
 import type { User } from "~/types";

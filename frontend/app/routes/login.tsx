@@ -36,13 +36,13 @@ export default function Login() {
     <div>
       {error ? <div>{error.message}</div> : null}
       <Form method="post">
-        <h1>Welcome to IRIDA Next UI</h1>
+        <h2>Sign Into Your Account</h2>
         <input
           name="email"
           autoComplete="email"
           placeholder="You're email address"
         />
-        <input name="password" placeholder="Password" />
+        <input name="password" type="password" placeholder="Password" />
         <button type="submit">Login</button>
       </Form>
     </div>

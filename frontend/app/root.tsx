@@ -1,4 +1,5 @@
-import type { MetaFunction } from "@remix-run/node";
+import { withEmotionCache } from "@emotion/react";
+import { unstable_useEnhancedEffect as useEnhancedEffect } from "@mui/material";
 import {
   Links,
   LiveReload,
@@ -10,11 +11,9 @@ import {
 } from "@remix-run/react";
 
 import * as React from "react";
-import { withEmotionCache } from "@emotion/react";
-import { unstable_useEnhancedEffect as useEnhancedEffect } from "@mui/material";
-import theme from "./src/theme";
 import ClientStyleContext from "./src/ClientStyleContext";
 import Layout from "./src/Layout";
+import theme from "./src/theme";
 
 interface DocumentProps {
   children: React.ReactNode;

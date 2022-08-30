@@ -6,7 +6,7 @@ export const sessionStorage = createCookieSessionStorage({
     sameSite: "lax",
     path: "/",
     httpOnly: true,
-    secrets: ["FLKSDJF323LKJE"], // REPLACE THIS!!
+    secrets: [String(process.env.SESSION_PWD)],
     secure: process.env.NODE_ENV === "production",
   },
 });
