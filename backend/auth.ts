@@ -13,7 +13,7 @@ import { createAuth } from "@keystone-6/auth";
 // See https://keystonejs.com/docs/apis/session#session-api for the session docs
 import { statelessSessions } from "@keystone-6/core/session";
 
-let sessionSecret = process.env.SESSION_SECRET;
+let sessionSecret = String(process.env.SESSION_SECRET);
 
 // Here is a best practice! It's fine to not have provided a session secret in dev,
 // however it should always be there in production.
@@ -23,7 +23,7 @@ if (!sessionSecret) {
       "The SESSION_SECRET environment variable must be set in production"
     );
   } else {
-    sessionSecret = process.env.COOKIE_SECRET;
+    sessionSecret = String(process.env.COOKIE_SECRET);
   }
 }
 
@@ -33,7 +33,6 @@ if (!sessionSecret) {
 const { withAuth } = createAuth({
   listKey: "User",
   identityField: "email",
-  sessionData: "name",
   secretField: "password",
   initFirstItem: {
     // If there are no items in the database, keystone will ask you to create
@@ -49,7 +48,7 @@ let sessionMaxAge = 60 * 60 * 24 * 30; // 30 days
 // This defines how sessions should work. For more details, check out: https://keystonejs.com/docs/apis/session#session-api
 const session = statelessSessions({
   maxAge: sessionMaxAge,
-  secret: sessionSecret!,
+  secret: sessionSecret,
 });
 
 export { withAuth, session };

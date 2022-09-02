@@ -7,9 +7,9 @@ You can find all the config options in our docs here: https://keystonejs.com/doc
 */
 import "dotenv/config";
 import { config } from "@keystone-6/core";
-
-// Look in the schema file for how we define our lists, and how users interact with them through graphql or the Admin UI
-import { lists } from "./schema";
+import { Project } from "./schemas/Project";
+import { Team } from "./schemas/Team";
+import { User } from "./schemas/User";
 
 // Keystone auth is configured separately - check out the basic auth setup we are importing from our auth file.
 import { withAuth, session } from "./auth";
@@ -34,7 +34,7 @@ export default withAuth(
       // For our starter, we check that someone has session data before letting them see the Admin UI.
       isAccessAllowed: (context) => !!context.session?.data,
     },
-    lists,
+    lists: { Team, User, Project },
     session,
   })
 );
