@@ -1,7 +1,9 @@
+import { gql, useMutation } from "@apollo/client";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import MenuIcon from "@mui/icons-material/Menu";
-import NotificationsIcon from "@mui/icons-material/Notifications";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import PeopleIcon from "@mui/icons-material/People";
 import {
   Badge,
@@ -13,25 +15,37 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
+  Stack,
   Toolbar,
   Typography,
 } from "@mui/material";
+import { signOut } from "next-auth/react";
 import Link from "next/link";
 import { useState } from "react";
 import { useUser } from "../hooks/user";
 import MainAppBar from "./MainAppBar";
 import MainDrawer from "./MainDrawer";
 
+const SIGN_OUT_MUTATION = gql`
+  mutation {
+    endSession
+  }
+`;
+
 const DRAWER_WIDTH = 240;
 
 export default function MainLayout({ children }) {
   const [open, setOpen] = useState(true);
+  const [signout] = useMutation(SIGN_OUT_MUTATION);
+
   const toggleDrawer = () => {
     setOpen(!open);
   };
 
-  const data = useUser();
-  console.log(data);
+  const logout = () => {
+    signout();
+    signOut();
+  };
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -58,10 +72,17 @@ export default function MainLayout({ children }) {
           >
             IRIDA NEXT UI
           </Typography>
-          <IconButton color="inherit">
-            <Badge badgeContent={4} color="secondary">
-              <NotificationsIcon />
-            </Badge>
+          <IconButton
+            onClick={logout}
+            sx={{
+              borderRadius: 60,
+              backgroundColor: "white",
+            }}
+          >
+            <Stack spacing={1} direction="row">
+              <AccountCircleIcon />
+              <SettingsOutlinedIcon />
+            </Stack>
           </IconButton>
         </Toolbar>
       </MainAppBar>

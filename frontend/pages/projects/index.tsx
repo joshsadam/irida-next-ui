@@ -2,6 +2,15 @@ import { gql } from "@apollo/client";
 import { Paper } from "@mui/material";
 import client from "../../apollo/client";
 
+export const ALL_PROJECTS_QUERY = gql`
+  query ALL_PROJECTS_QUERY {
+    projects {
+      name
+      id
+    }
+  }
+`;
+
 export async function getStaticProps() {
   const { data } = await client.query({
     query: ALL_PROJECTS_QUERY,
@@ -13,15 +22,6 @@ export async function getStaticProps() {
     },
   };
 }
-
-export const ALL_PROJECTS_QUERY = gql`
-  query ALL_PROJECTS_QUERY {
-    projects {
-      name
-      id
-    }
-  }
-`;
 
 export default function Projects({ projects }) {
   return (
