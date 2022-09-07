@@ -6,6 +6,15 @@ import {
   text,
 } from "@keystone-6/core/fields";
 
+type UserData = {
+  id: string;
+  name: string;
+  email: string;
+  isAdmin: boolean;
+};
+
+const isUser = ({ session }: { session: Session }) => !!session?.data.id;
+
 export const User = list({
   fields: {
     name: text({ validation: { isRequired: true } }),

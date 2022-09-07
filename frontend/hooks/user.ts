@@ -5,14 +5,15 @@ export const CURRENT_USER_QUERY = gql`
     authenticatedItem {
       ... on User {
         id
-        email
         name
+        email
       }
     }
   }
 `;
 
 export function useUser() {
-  const { data } = useQuery(CURRENT_USER_QUERY);
-  return data?.authenticatedItem;
+  const { data, loading, error } = useQuery(CURRENT_USER_QUERY);
+  console.log({ data, loading, error });
+  return { loading, user: data?.authenticatedItem, error };
 }

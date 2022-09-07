@@ -39,6 +39,7 @@ const { withAuth } = createAuth({
     // a new user, filling in these fields.
     fields: ["name", "email", "password"],
   },
+  sessionData: "isAdmin",
 });
 
 // This defines how long people will remain logged in for.
